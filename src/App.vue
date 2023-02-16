@@ -285,9 +285,9 @@ h1{
     background-color: #F5F5F5;
     color:#222D3D ;
     padding: 20px;
-    margin-top: 60px;
+    margin-top: 25px;
     border-radius: 20px;
-    height: 750px;
+    height: 700px;
   }
 
   #inputi{
