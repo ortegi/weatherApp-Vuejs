@@ -1,29 +1,22 @@
-# weatherApp
+# weatherApi :sun_with_face:
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a weather app that allows users to see the current weather and forecast for their current location or any city they choose. :derelict_house:
 
-## Recommended IDE Setup
+## Getting Started
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+To try this app just [click here](https://brilliant-dusk-8b4c61.netlify.app)
 
-## Customize configuration
+## Functionality
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Upon loading the page, the app will automatically get the user's current location and display the current weather and forecast for that location. 
+The user can also search for the weather in any city by entering the city name and country code in the search bar.
 
-## Project Setup
+## API
 
-```sh
-npm install
-```
+This app uses the Open-Meteo API to retrieve weather data. More information about this API can be found at https://open-meteo.com/.
 
-### Compile and Hot-Reload for Development
+## Technologies
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+- Html/Css/Javascript
+-Vue js
+-Bootstrap
