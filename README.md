@@ -18,5 +18,5 @@ This app uses the Open-Meteo API to retrieve weather data. More information abou
 ## Technologies
 
 - Html/Css/Javascript
--Vue js
--Bootstrap
+- Vue js
+- Bootstrap
