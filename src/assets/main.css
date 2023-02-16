@@ -1,6 +1,6 @@
 body{
     font-family: 'Ubuntu', sans-serif;
-    background-color: #5C9CE5;
+    background-color: #0795F9;
     color: white;
 }
 
@@ -51,5 +51,20 @@ h5{
 }
 
 .fa-cloud{
-    color: #edede9;
+    color: #B5BEC6;
 }
+
+@media only screen and (min-width: 900px) {
+    .nx-h{
+        background-color: #ECEEF1;
+        border-radius: 10px;
+        width: 170px;
+    }
+
+    .rt{
+        color:#222D3D ;
+    }
+
+  
+}
+    

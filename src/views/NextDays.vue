@@ -60,28 +60,26 @@ setTimeout(makeDailyForecast, 2000)
 
 
 <template>
-   <div class="container">
-        <div class="row">
-            <div class="col-12 d-flex big">
-                <div v-if="!dailyForecast" class="text-center mx-auto mt-3">
-                    <TheLoader/>
-                </div>
-                <div v-if="dailyForecast" v-for="item in dailyForecast" class="me-2 text-center p-3 nx-h">
-                    <h5 class="fw-bold">{{ item.day }}</h5>
-                    <h6>{{ Math.floor(item.temp_max) }} ºC</h6>
-                    <h5 class="time fw-bold"><i :class="item.emoji[1]"></i> {{ item.emoji[0] }}</h5>
-                    <h6>{{ Math.floor(item.temp_min) }} ºC</h6>
-                </div>
-            </div>
+  
+    <div class="d-flex big mx-auto">
+        <div v-if="!dailyForecast" class="text-center mx-auto mt-3">
+            <TheLoader/>
         </div>
-   </div>
+        <div v-if="dailyForecast" v-for="item in dailyForecast" class="me-2 text-center p-3 nx-h mx-auto">
+            <h5 class="fw-bold">{{ item.day }}</h5>
+            <h6 class="mb-4">{{ Math.floor(item.temp_max) }} ºC</h6>
+            <h5 class="time fw-bold text-center"><i :class="item.emoji[1]"></i> {{ item.emoji[0] }}</h5>
+            <h6>{{ Math.floor(item.temp_min) }} ºC</h6>
+        </div>
+    </div>
+
 </template>
 
 <style>
 
 .time{
-    width: 80px;
-    height: 70px;
+    height: 62px;
+    width: 140px;
 }
 .time h5{
     font-size: 13px;

@@ -32,4 +32,13 @@ const theData = computed( () =>{
   height: 70px;
   border-radius: 15px;
 }
+
+@media only screen and (min-width: 900px) {
+  
+  .weatherDiv{
+  background-color: #ECEEF1;
+  width: 15%;
+  }
+}
+
 </style>

@@ -193,7 +193,7 @@ const test = () =>{
   <div class="container">
     <!--First row-->
     <div class="row mt-4">
-      <div class="col-12">
+      <div class="col-12 col-lg-8 mx-auto">
           <form method="get" @submit.prevent="" class="w-100">
           <input list="browsers" name="browser" v-model="searchInput" class="mx-auto"  @change="selectCity" autocomplete="off" id="inputi">
             <datalist id="browsers">
@@ -267,7 +267,7 @@ input.mx-auto{
 
 
 input.mx-auto:focus{
-  border: 2px solid #4F4789;
+  border: 2px solid #4F4789 !important;
 }
 
 
@@ -277,6 +277,34 @@ h1{
 
 
 .active{
- color: #6A6B83;
+ color:  #90E0EF;
 }
+
+@media only screen and (min-width: 900px) {
+    .container{
+    background-color: #F5F5F5;
+    color:#222D3D ;
+    padding: 20px;
+    margin-top: 60px;
+    border-radius: 20px;
+    height: 750px;
+  }
+
+  #inputi{
+    background-color: #ECEEF1;
+    color:#222D3D;
+  }
+
+    .active{
+  color:  #0795F9 ;
+  }
+
+  input.mx-auto{
+    border: 2px solid #0795F9 !important ;
+  }
+
+ 
+}
+
+
 </style>
