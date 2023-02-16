@@ -1,0 +1,55 @@
+body{
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #5C9CE5;
+    color: white;
+}
+
+h6{
+    font-size: 14px;
+}
+
+i{
+    color: #90E0EF;;
+}
+
+.rt{
+    color: #fff;
+}
+
+.nx-h{
+    background-color: #ffffff1a;
+    border-radius: 10px;
+    width: 170px;
+    
+}
+
+h5{
+    font-size: 15px;
+}
+
+.big{
+    overflow: scroll;
+   -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+  }
+  
+  .big i{
+      font-size: 29px;
+  }
+  
+  .big h5{
+      font-size: 16px;
+  }
+  .big::-webkit-scrollbar {
+    display: none;
+  }
+
+
+.fa-sun{
+    color: #ffb703;
+
+}
+
+.fa-cloud{
+    color: #edede9;
+}
