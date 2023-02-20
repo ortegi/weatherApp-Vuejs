@@ -8,22 +8,26 @@ const {lat, lon, codeData} = storeToRefs(useWeather)
 
 const dataDaily = ref('')
 const dailyForecast = ref([])
+const loader = ref(false)
 onMounted(() => {
     getDailyWeather(lat.value, lon.value)
+    
 })
 
 
 async function getDailyWeather(lat,lon){
-    console.log(lat,lon)
+    loader.value = true
     try {
         const response = await fetch ( `https://api.open-meteo.com/v1/forecast?timezone=auto&latitude=${lat}&longitude=${lon}&daily=temperature_2m_max&daily=temperature_2m_min&daily=weathercode`)
         if (response.ok){
             const jsonResponse = await response.json()
             dataDaily.value = jsonResponse
-          
+            makeDailyForecast()
         }
     }catch (error){
         console.log(error)
+    }finally{
+        loader.value = false
     }
 
 }
@@ -32,7 +36,6 @@ const makeDailyForecast = () => {
     if(dataDaily.value){
     const d = new Date()
     let day = d.getDay()
-    console.log(day)
     let days = ['Sun','Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
      for (let i = 0; i < dataDaily.value.daily.time.length; i++){
         if(i == 0){
@@ -45,44 +48,35 @@ const makeDailyForecast = () => {
             }else{
                 let today = days[(day + i) - 7]
                 dailyForecast.value.push({temp_max: dataDaily.value.daily.temperature_2m_max[i], temp_min: dataDaily.value.daily.temperature_2m_min[i], day: today, emoji: codeData.value[dataDaily.value.daily.weathercode[i]]})
-            }
-            
+            }   
         }
-        
      }
-
     }
-
 }
-
-setTimeout(makeDailyForecast, 2000)
 </script>
 
 
 <template>
-  
-    <div class="d-flex big mx-auto">
-        <div v-if="!dailyForecast" class="text-center mx-auto mt-3">
+    <div class="d-flex big mx-auto justify-content-center flex-row">
+        <div v-if="loader" class="text-center mx-auto mt-3">
             <TheLoader/>
         </div>
-        <div v-if="dailyForecast" v-for="item in dailyForecast" class="me-2 text-center p-3 nx-h mx-auto">
-            <h5 class="fw-bold">{{ item.day }}</h5>
-            <h6 class="mb-4">{{ Math.floor(item.temp_max) }} ºC</h6>
-            <h5 class="time fw-bold text-center"><i :class="item.emoji[1]"></i> {{ item.emoji[0] }}</h5>
+        <div v-else-if="dailyForecast" v-for="item in dailyForecast" class="text-center p-2 nx-h mx-2">
+            <h5 class="fw-bold mb-2 day">{{ item.day }}</h5>
+            <h6>{{ Math.floor(item.temp_max) }} ºC</h6>
+            <h5 class="time fw-bold text-center"><i :class="item.emoji[1]"></i> </h5>
             <h6>{{ Math.floor(item.temp_min) }} ºC</h6>
         </div>
     </div>
-
 </template>
 
-<style>
+<style scoped>
 
-.time{
-    height: 62px;
-    width: 140px;
-}
-.time h5{
-    font-size: 13px;
+@media only screen and (max-width: 600px){
+
+    h5.fw-bold.mb-2.day{
+    width: 50px;
+    }
 }
 
 </style>

@@ -5,6 +5,8 @@ import ExtraInfo from './components/ExtraInfo.vue'
 import { storeToRefs } from 'pinia';
 import { useWeatherStore } from './stores/weatherStore';
 import { useRouter } from 'vue-router';
+import { useToastify } from './composables/Toastify'
+const { showMessage } = useToastify()
 
 /*pinia*/
 const useWeather = useWeatherStore ()
@@ -14,7 +16,6 @@ const data = ref('')
 const city = ref('')
 const searchInput = ref('')
 const cities = ref('')
-const selectedCity = ref('')
 const emoji = ref('')
 //router
 const router = useRouter();
@@ -26,7 +27,6 @@ onMounted( ()=>{
 })
 
 
-
 const getLocation = async()=>{     //to get the current lat and lon values
   if(navigator.geolocation){
         return navigator.geolocation.getCurrentPosition(showPosition);
@@ -35,6 +35,7 @@ const getLocation = async()=>{     //to get the current lat and lon values
     }
 
 }
+
 
 const showPosition = async (position) =>{
     lon.value  = position.coords.longitude; 
@@ -48,6 +49,7 @@ const back = () => {
     router.push("/");
 };
 
+
 const getCityName = async (la, lo) =>{
   try{
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${la}&lon=${lo}&zoom=10&format=jsonv2`)
@@ -58,8 +60,10 @@ const getCityName = async (la, lo) =>{
     }
   }catch(error){
     console.log(error)
+    showMessage('Algo ha ido no debia', 'fail')
   }
 }
+
 
 const getWeather = async (la, lo) =>{
   try{
@@ -70,40 +74,27 @@ const getWeather = async (la, lo) =>{
             makeNextHoursForeCast()
         }
     }catch (error){
-        console.log(error)
-       
+      console.log(error)
+      showMessage('Algo ha ido no debia', 'fail')
     }
 }
 
 
 const getCityCoords = async() => {
-  console.log('get')
     try{
         const response = await fetch (`https://nominatim.openstreetmap.org/search.php?city=${searchInput.value}&format=jsonv2`);
         if (response.ok){
-          const jsonResponse = await response.json()
-          cities.value = jsonResponse        
+        const jsonResponse = await response.json()  
+        if(jsonResponse.length == 0){
+          showMessage('Upps!  Try with another city!', 'c')
+        }else{
+          cities.value = jsonResponse 
         }
+      }
     }catch (error){
     console.log(error)       
-    }
-}
-
-const selectCity = ()=>{
-  document.getElementById('inputi').style.borderColor = 'white'
-  getCityCoords()
-  if(cities.value){
-     for(let i = 0; i < cities.value.length; i++){
-    if(cities.value[i].display_name == searchInput.value){
-      selectedCity.value = cities.value[i]
-      city.value = cities.value[i].display_name
-    }
+    showMessage('Algo ha ido no debia', 'fail')
   }
-  test()
-  }else{
-    document.getElementById('inputi').style.borderColor = 'red'
-  }
- 
 }
 
 
@@ -117,8 +108,10 @@ async function getCode(){
         }
     }catch(error){
         console.log(error)
+        showMessage('Algo ha ido no debia', 'fail')
     }
  }
+
 
  const makeNextHoursForeCast =  () =>{
     const nextHours = ref([])
@@ -162,6 +155,7 @@ const getTemperature = computed (()=>{
   
 })
 
+
 const getDaHour = () => {
   const d = new Date()
   const hour = d.getHours()
@@ -179,14 +173,13 @@ if(data.value && codeData.value){
 }
 })
 
-const test = () =>{
-  lat.value = selectedCity.value.lat
-  lon.value = selectedCity.value.lon
-  getCityName(selectedCity.value.lat, selectedCity.value.lon)
-  getWeather(selectedCity.value.lat, selectedCity.value.lon)
+
+const test = (lat, lon) =>{
+  getWeather(lat, lon)
+  cities.value = []
+  getCityName(lat, lon)
   back()
 }
-
 </script>
 
 <template>
@@ -194,31 +187,30 @@ const test = () =>{
     <!--First row-->
     <div class="row mt-4">
       <div class="col-12 col-lg-8 mx-auto">
-          <form method="get" @submit.prevent="" class="w-100">
-          <input list="browsers" name="browser" v-model="searchInput" class="mx-auto"  @change="selectCity" autocomplete="off" id="inputi">
-            <datalist id="browsers">
-            <option v-for="city in cities">   {{ city.display_name }} </option>
-            </datalist>
+          <form method="get" @submit.prevent="getCityCoords" class="w-100">
+          <input list="browsers" name="browser" v-model="searchInput" class="mx-auto"  autocomplete="off" id="inputi">
+            <ul class="list-group da-list">
+              <li v-for="city in cities" class="list-group-item list-group-item-action" @click="test(city.lat, city.lon)" > {{ city.display_name }}  </li>
+            </ul>
+            
           </form>
       </div>
     </div>
 
     <div class="row mt-3">
-      <div class="col-12">
+      <div class="col-12 low">
         <p class="text-center">{{ getHour }}</p>
       </div>
     </div>
-    
     <div class="row">
-      <div class="col-12 text-center">
+      <div class="col-12 text-center low ">
         <h1 class="">{{ getTemperature }}</h1>
         <p> <i :class="emoji" class="mx-1"></i>{{ getTempCode }}</p>
         <p class="text-center fw-bold"> {{ city.name }}</p>
       </div>
     </div>
-
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 low">
         <div class="d-flex flex-row flex-wrap" v-if="data">
           <ExtraInfo :dataWeather="data.hourly.apparent_temperature" dataName="Feels like" unit="°C" emoji="fa-solid fa-temperature-empty"/>
           <ExtraInfo :dataWeather="data.hourly.relativehumidity_2m" dataName="Humidity" unit="%" emoji="fa-solid fa-droplet"/>
@@ -229,23 +221,19 @@ const test = () =>{
         </div>
       </div>
     </div>
-
-
     <div class="row mt-3">
-      <div class="col-12 text-center" >
+      <div class="col-12 text-center low" >
         <nav>
-          <router-link to="/" class="text-decoration-none fw-bold rt" active-class="active">Next Hours </router-link>
-          <router-link to="/days" class="text-decoration-none fw-bold rt" active-class="active">Next Days</router-link>
+          <router-link to="/" class="btn btn-outline-primary left-btn" active-class="active">Next Hours </router-link>
+          <router-link to="/days" class="btn btn-outline-primary right-btn" active-class="active">Next Days</router-link>
         </nav>
       </div>
     </div>
-    
-    <div class="row mt-4">
+    <div class="row mt-4 low">
       <div class="col-12">
         <RouterView />
       </div>
     </div>
-
   </div>
 </template>
 <style scoped>
@@ -270,19 +258,40 @@ input.mx-auto:focus{
   border: 2px solid #4F4789 !important;
 }
 
-
 h1{
   font-size: 58px;
 }
 
+.left-btn{
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.right-btn{
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
 
 .active{
- color:  #90E0EF;
+ color: white;
+}
+
+.da-list{
+  z-index: 989;
+  position: absolute;
+}
+
+.low{
+  z-index: 15;
 }
 
 @media only screen and (min-width: 900px) {
     .container{
-    background-color: #F5F5F5;
+    background-color: #ECEEF1;
     color:#222D3D ;
     padding: 20px;
     margin-top: 25px;
@@ -295,14 +304,10 @@ h1{
     color:#222D3D;
   }
 
-    .active{
-  color:  #0795F9 ;
-  }
-
+  
   input.mx-auto{
     border: 2px solid #0795F9 !important ;
   }
-
  
 }
 

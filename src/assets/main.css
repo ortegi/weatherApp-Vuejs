@@ -18,9 +18,7 @@ i{
 
 .nx-h{
     background-color: #ffffff1a;
-    border-radius: 10px;
-    width: 170px;
-    
+    border-radius: 10px;   
 }
 
 h5{
@@ -31,7 +29,7 @@ h5{
     overflow: scroll;
    -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
-  }
+}
   
   .big i{
       font-size: 29px;
@@ -56,9 +54,9 @@ h5{
 
 @media only screen and (min-width: 900px) {
     .nx-h{
-        background-color: #ECEEF1;
+        background-color: #fff;
         border-radius: 10px;
-        width: 170px;
+        width: 140px;
     }
 
     .rt{
